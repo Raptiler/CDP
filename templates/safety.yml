@@ -1,0 +1,7 @@
+script:
+  - docker pull hysnsec/safety
+  - docker run --rm -v $(pwd):/src hysnsec/safety check -r requirements.txt --json > oast-results.json
+artifacts:
+  paths: [oast-results.json]
+  when: always # What does this do?
+allow_failure: true

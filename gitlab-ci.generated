@@ -1,0 +1,25 @@
+image: docker:20.10
+services:
+- docker:dind
+stages:
+- build
+- test
+build:
+  before_script:
+  - pip3 install --upgrade virtualenv
+  image: python:3.6
+  script:
+  - virtualenv env
+  - source env/bin/activate
+  - pip install -r requirements.txt
+  - python manage.py check
+test:
+  allow_failure: true
+  artifacts:
+    paths:
+    - oast-results.json
+    when: always
+  script:
+  - docker pull hysnsec/safety
+  - docker run --rm -v $(pwd):/src hysnsec/safety check -r requirements.txt --json
+    > oast-results.json
