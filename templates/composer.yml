@@ -1,0 +1,21 @@
+image: php:7.4
+before_script:
+  - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+  - php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+  - php -r "unlink('composer-setup.php');"
+  - apt update
+  - apt install unzip
+script:
+  - composer install
+  - composer audit -f json | tee composer-output.json
+artifacts:
+  paths: [composer-output.json]
+  when: always
+allow_failure: true
+
+integration:
+stage: integration
+script:
+  - echo "This is an integration step"
+  - exit 1
+allow_failure: true # Even if the job fails, continue to the next stages

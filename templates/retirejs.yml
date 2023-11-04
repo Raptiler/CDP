@@ -1,0 +1,9 @@
+image: node:alpine3.10
+script:
+  - npm install
+  - npm install retire -g
+  - retire --outputformat json --outputpath retirejs-report.json
+artifacts:
+  paths: [retirejs-report.json]
+  when: always
+allow_failure: true
